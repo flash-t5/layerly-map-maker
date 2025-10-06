@@ -42,6 +42,7 @@ export const TileMapEditor = () => {
   const [playerVel, setPlayerVel] = useState({ x: 0, y: 0 });
   const [isJumping, setIsJumping] = useState(false);
   const keysPressed = useRef<Set<string>>(new Set());
+  const backgroundMusic = useRef<HTMLAudioElement | null>(null);
 
   // Load sprite sheets
   useEffect(() => {
@@ -258,7 +259,22 @@ export const TileMapEditor = () => {
       setPlayerPos({ x: 2, y: 8 });
       setPlayerVel({ x: 0, y: 0 });
       setIsJumping(false);
+      
+      // Start background music
+      if (!backgroundMusic.current) {
+        backgroundMusic.current = new Audio("/music_pixel_dreams_3.mp3");
+        backgroundMusic.current.loop = true;
+        backgroundMusic.current.volume = 0.3;
+      }
+      backgroundMusic.current.play().catch(() => {});
+      
       toast.info("Use Arrow Keys to move, Space to jump!");
+    } else {
+      // Stop background music
+      if (backgroundMusic.current) {
+        backgroundMusic.current.pause();
+        backgroundMusic.current.currentTime = 0;
+      }
     }
   };
 
